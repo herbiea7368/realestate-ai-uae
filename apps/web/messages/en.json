@@ -1,0 +1,27 @@
+{
+  "home": {
+    "headline": "Launch RERA-compliant listings with AI",
+    "subhead": "Validate Trakheesi permits, generate bilingual copy, and publish in minutes.",
+    "cta": {
+      "create": "Add listing",
+      "validate": "Validate permit"
+    },
+    "compliance": {
+      "title": "PDPL Safe",
+      "caption": "Consent ledger + TDRA messaging windows enforced"
+    },
+    "sections": {
+      "listing": {
+        "title": "AI Listing Writer",
+        "body": "Draft English and Arabic descriptions that automatically include Trakheesi numbers and payment plan highlights."
+      },
+      "permits": {
+        "title": "Real-time Permits",
+        "body": "Connects to DLD Trakheesi and caches statuses with configurable TTL and audit logging."
+      },
+      "map": {
+        "title": "Community Insights"
+      }
+    }
+  }
+}

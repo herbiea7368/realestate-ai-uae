@@ -1,0 +1,11 @@
+{
+  "extends": "../../packages/config/tsconfig.next.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@realestate-ai-uae/ui": ["../../packages/ui/src"],
+      "@realestate-ai-uae/ui/*": ["../../packages/ui/src/*"]
+    }
+  }
+}
+

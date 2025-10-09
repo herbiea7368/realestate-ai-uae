@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "baseUrl": "./",
+    "paths": {
+      "@realestate-ai-uae/ui/*": ["../ui/src/*"],
+      "@realestate-ai-uae/config/*": ["./*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "build"]
+}
+

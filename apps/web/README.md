@@ -1,3 +1,3 @@
 # Web App
 
-Placeholder for Next.js 14 web client scaffold.
+Next.js 14 application with Tailwind, next-intl, rtlcss, shadcn/ui integration, and Mapbox GL placeholder. Run with pnpm --filter @realestate-ai-uae/web dev.
