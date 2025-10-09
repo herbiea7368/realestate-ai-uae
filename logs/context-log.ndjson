@@ -1,5 +1,0 @@
-{\ timestamp\:\2025-10-09T12:30:00Z\,\actor\:\codex\,\scope\:\repo\,\event\:\init\,\summary\:\Initialized RealEstate AI UAE workspace\}
-{\ timestamp\:\2025-10-09T12:45:00Z\,\actor\:\codex\,\scope\:\permit-service\,\event\:\scaffold\,\summary\:\Created NestJS permit validation service\}
-{\ timestamp\:\2025-10-09T12:46:00Z\,\actor\:\codex\,\scope\:\listing-writer\,\event\:\scaffold\,\summary\:\Created FastAPI listing writer stub with compliance gate\}
-{\ timestamp\:\2025-10-09T12:55:00Z\,\actor\:\codex\,\scope\:\ci\,\event\:\lint\,\summary\:\Ran workspace lint with ESLint\}
-{\ timestamp\:\2025-10-09T12:56:00Z\,\actor\:\codex\,\scope\:\ci\,\event\:\unit-tests\,\summary\:\Executed permit service unit tests\}

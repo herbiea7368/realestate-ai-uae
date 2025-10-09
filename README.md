@@ -1,28 +1,41 @@
 # RealEstate AI UAE Platform
 
-Bootstrapped repository for the Dubai/UAE-focused AI real estate platform. This project follows the product requirements defined in `RealEstate_AI_PRD_Comprehensive.docx` and establishes the initial scaffolding for backend, ML bridge, and web clients.
+Greenfield implementation for the Dubai/UAE real estate platform described in `RealEstate_AI_PRD_Comprehensive.docx`. The repository is organized as a pnpm monorepo with separate workspaces for web, APIs, ML bridges, shared packages, and infrastructure.
 
-## Structure
+## Repository Layout
 
-- `apps/permit-service` – NestJS-based compliance/permit API service.
-- `apps/listing-writer-stub` – FastAPI stub for the listing writer bridge with compliance gates.
-- `apps/web` – Placeholder for the Next.js 14 web application shell.
-- `configs/` – Shared configuration (MCP servers, project variables, SLO definitions).
-- `docs/` – Architecture notes, context persistence, audit trail, and agent guardrails.
-- `infra/` – Terraform and platform provisioning placeholders.
-- `logs/` – Context logging sink (rotated via future automation).
+- `apps/web` – Next.js 14 (TypeScript) web client with Tailwind, next-intl, rtlcss, shadcn/ui, and Mapbox GL.
+- `services/api` – NestJS backend exposing REST/GraphQL modules for compliance (`permits`, `listing-writer`), auth, and health.
+- `services/ml-bridge` – FastAPI adapters that bridge to AVM/NLP inference endpoints.
+- `packages/ui` – Shared UI components and theme primitives.
+- `packages/config` – Centralized linting, formatting, and tsconfig presets.
+- `infra/terraform` – AWS me-central-1 baseline infrastructure as code.
+- `docs` – PRD extracts, architecture decisions, compliance notes.
+- `.github/workflows` – CI pipelines for build, lint, test, e2e smoke runs.
+- `tools` – Context logging utilities and operational scripts.
+
+## Prerequisites
+
+- Node.js 20 LTS
+- pnpm ≥ 9
+- Python 3.11 (for FastAPI services)
+- Docker (optional for local infra emulation)
 
 ## Getting Started
 
 ```sh
-npm install
-npm run dev --workspace @realestate-ai-uae/permit-service
+pnpm install
+pnpm dev:web       # Next.js dev server
+pnpm dev:api       # NestJS API (services/api)
+pnpm dev:ml        # FastAPI ML bridge
 ```
 
-For the FastAPI stub:
+### Testing & Quality
 
 ```sh
-uvicorn apps.listing-writer-stub.main:app --reload
+pnpm lint
+pnpm test
+pnpm test:e2e
 ```
 
-Refer to `docs/context/first-slice-plan.md` for the incremental roadmap and `AGENTS.md` for compliance guardrails and SLO targets.
+Refer to `docs/ADR-0001-architecture.md` for the architecture decision log anchored to the PRD and `AGENTS.md` for mission guardrails, SLOs, and compliance requirements.

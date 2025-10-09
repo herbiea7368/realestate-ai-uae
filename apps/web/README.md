@@ -1,4 +1,3 @@
-# Web App Placeholder
+# Web App
 
-Next.js 14 web experience scaffolding will land in a later slice.
-
+Placeholder for Next.js 14 web client scaffold.

@@ -2,20 +2,15 @@
   "name": "realestate-ai-uae",
   "version": "0.1.0",
   "private": true,
-  "license": "UNLICENSED",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "license": "MIT",
+  "packageManager": "pnpm@9.10.0",
   "scripts": {
-    "bootstrap": "npm install --workspaces",
-    "build": "npm run build --workspaces",
-    "test": "npm run test --workspaces",
-    "lint": "npm run lint --workspaces",
-    "dev:permit-service": "npm run start:dev --workspace @realestate-ai-uae/permit-service"
-  },
-  "engines": {
-    "node": ">=18.18.0",
-    "npm": ">=9.0.0"
+    "dev:web": "pnpm --filter @realestate-ai-uae/web dev",
+    "dev:api": "pnpm --filter @realestate-ai-uae/api start:dev",
+    "dev:ml": "pnpm --filter @realestate-ai-uae/ml-bridge dev",
+    "build": "pnpm run build --recursive",
+    "lint": "pnpm run lint --recursive",
+    "test": "pnpm run test --recursive",
+    "test:e2e": "pnpm --filter @realestate-ai-uae/api test:e2e"
   }
 }
