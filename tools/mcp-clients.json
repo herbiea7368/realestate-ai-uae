@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schema.mcp.dev/mcp-clients.json",
+  "version": "1.0.0",
+  "clients": [
+    {
+      "id": "filesystem",
+      "type": "filesystem",
+      "description": "Local workspace access for read/write and grep operations.",
+      "options": {
+        "root": "."
+      },
+      "tools": [
+        "fs.read",
+        "fs.write",
+        "fs.append",
+        "fs.grep"
+      ]
+    },
+    {
+      "id": "github",
+      "type": "github",
+      "description": "GitHub workflow automation scoped to herbiea7368/realestate-ai-uae.",
+      "options": {
+        "owner": "herbiea7368",
+        "repo": "realestate-ai-uae",
+        "tokenEnv": "GITHUB_TOKEN"
+      },
+      "tools": [
+        "repo.create",
+        "repo.push",
+        "repo.status"
+      ]
+    },
+    {
+      "id": "playwright",
+      "type": "playwright",
+      "description": "Browser-based smoke and e2e execution.",
+      "options": {
+        "config": "apps/web/playwright.config.ts"
+      },
+      "tools": [
+        "playwright.run",
+        "playwright.record"
+      ]
+    },
+    {
+      "id": "run-python",
+      "type": "python-runner",
+      "description": "Ad-hoc data utilities and script execution.",
+      "options": {
+        "pythonPath": "python3"
+      },
+      "tools": [
+        "python.eval",
+        "python.runfile"
+      ]
+    }
+  ]
+}
+
