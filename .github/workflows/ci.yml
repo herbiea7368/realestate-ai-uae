@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck API
+        run: pnpm --filter @realestate-ai-uae/api typecheck
+
+      - name: Typecheck Web
+        run: pnpm --filter @realestate-ai-uae/web typecheck
+
+      - name: Run unit tests
+        run: pnpm --filter @realestate-ai-uae/api test
+
+      - name: Run e2e tests
+        run: pnpm --filter @realestate-ai-uae/api test:e2e
+
+      - name: Build UI package
+        run: pnpm --filter @realestate-ai-uae/ui build
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-coverage
+          path: services/api/coverage
+          if-no-files-found: ignore
+

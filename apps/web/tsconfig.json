@@ -3,9 +3,31 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@realestate-ai-uae/ui": ["../../packages/ui/src"],
-      "@realestate-ai-uae/ui/*": ["../../packages/ui/src/*"]
-    }
-  }
+      "@realestate-ai-uae/ui": [
+        "../../packages/ui/src"
+      ],
+      "@realestate-ai-uae/ui/*": [
+        "../../packages/ui/src/*"
+      ],
+      "@/components/*": [
+        "components/*"
+      ]
+    },
+    "noEmit": true,
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
-

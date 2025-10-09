@@ -1,3 +1,4 @@
+import { Expose } from 'class-transformer';
 import { IsEnum, IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
 
 export enum ListingLanguage {
@@ -6,6 +7,7 @@ export enum ListingLanguage {
 }
 
 export class ListingWriterRequestDto {
+  @Expose({ name: 'property_id' })
   @IsString()
   @IsNotEmpty()
   propertyId!: string;
@@ -14,6 +16,7 @@ export class ListingWriterRequestDto {
   @IsNotEmpty()
   market!: string;
 
+  @Expose({ name: 'trakheesi_number' })
   @Matches(/^[0-9]{6}$/)
   trakheesiNumber!: string;
 

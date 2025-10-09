@@ -23,5 +23,20 @@
         "title": "Community Insights"
       }
     }
+  },
+  "listingForm": {
+    "title": "Add listing",
+    "subtitle": "Validate Trakheesi permits before generating content.",
+    "fields": {
+      "propertyId": "Property ID",
+      "trakheesi": "Trakheesi number",
+      "helper": "Enter the 6-digit permit as issued by DLD."
+    },
+    "submit": "Validate permit",
+    "submitting": "Validating...",
+    "success": "Permit is valid. Listing can be published.",
+    "errors": {
+      "invalid": "Permit cannot be published. Check expiry or suspension status."
+    }
   }
 }

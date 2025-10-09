@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 
+import { PermitsModule } from '../permits/permits.module';
+
 import { ListingWriterController } from './listing-writer.controller';
 import { ListingWriterService } from './listing-writer.service';
-import { PermitsModule } from '../permits/permits.module';
 
 @Module({
   imports: [PermitsModule],

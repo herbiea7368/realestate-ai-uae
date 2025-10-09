@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
@@ -27,7 +29,7 @@ async function bootstrap() {
   const port = Number(process.env.PORT ?? 4000);
   await app.listen({ port, host: '0.0.0.0' });
   const logger = app.get(PinoLogger);
-  logger.log(API ready on port );
+  logger.log(`API ready on port ${port}`);
 }
 
 bootstrap().catch((error) => {

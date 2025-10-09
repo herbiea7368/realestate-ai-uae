@@ -8,9 +8,9 @@
     "dev:web": "pnpm --filter @realestate-ai-uae/web dev",
     "dev:api": "pnpm --filter @realestate-ai-uae/api start:dev",
     "dev:ml": "pnpm --filter @realestate-ai-uae/ml-bridge dev",
-    "build": "pnpm run build --recursive",
-    "lint": "pnpm run lint --recursive",
-    "test": "pnpm run test --recursive",
+    "build": "pnpm recursive run build",
+    "lint": "pnpm recursive run lint",
+    "test": "pnpm recursive run test",
     "test:e2e": "pnpm --filter @realestate-ai-uae/api test:e2e"
   }
 }

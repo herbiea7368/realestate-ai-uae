@@ -5,6 +5,7 @@ import { PermitsService } from './permits.service';
 
 @Module({
   controllers: [PermitsController],
-  providers: [PermitsService]
+  providers: [PermitsService],
+  exports: [PermitsService],
 })
 export class PermitsModule {}

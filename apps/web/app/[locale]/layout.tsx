@@ -8,7 +8,7 @@ import '../globals.css';
 
 export const metadata = {
   title: 'RealEstate AI UAE',
-  description: 'Dubai-focused real estate platform with AI-assisted workflows.'
+  description: 'Dubai-focused real estate platform with AI-assisted workflows.',
 };
 
 export function generateStaticParams() {
@@ -17,7 +17,7 @@ export function generateStaticParams() {
 
 async function getMessages(locale: string) {
   try {
-    const messages = (await import(../../messages/.json)).default;
+    const messages = (await import('../../messages/' + locale + '.json')).default;
     return messages;
   } catch (error) {
     notFound();
@@ -26,7 +26,7 @@ async function getMessages(locale: string) {
 
 export default async function LocaleLayout({
   children,
-  params
+  params,
 }: {
   children: ReactNode;
   params: { locale: string };
@@ -55,7 +55,7 @@ export default async function LocaleLayout({
             <main className="flex-1">{children}</main>
             <footer className="border-t bg-white/80">
               <div className="mx-auto max-w-5xl px-6 py-4 text-sm text-slate-500">
-                © {new Date().getFullYear()} RERA compliant automation.
+                {'©'} {new Date().getFullYear()} RERA compliant automation.
               </div>
             </footer>
           </div>

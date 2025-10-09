@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Headers, Post } from '@nestjs/common';
 
-import { TokenRequestDto } from './dto/token-request.dto';
 import { AuthService } from './auth.service';
+import { TokenRequestDto } from './dto/token-request.dto';
 
 @Controller({ path: 'auth', version: '1' })
 export class AuthController {

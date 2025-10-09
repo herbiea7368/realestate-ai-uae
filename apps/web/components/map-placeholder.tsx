@@ -11,24 +11,23 @@ export function MapPlaceholder({ latitude = 25.2048, longitude = 55.2708 }: MapP
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    let mapboxgl: typeof import('mapbox-gl') | undefined;
-
     async function loadMap() {
       try {
-        mapboxgl = await import('mapbox-gl');
+        const module = await import('mapbox-gl');
+        const mapboxgl = module.default as typeof module.default & {
+          accessToken: string;
+        };
         mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? '';
-        if (!mapboxgl.accessToken) {
+        if (!mapboxgl.accessToken || !containerRef.current) {
           return;
         }
-        if (containerRef.current) {
-          const map = new mapboxgl.Map({
-            container: containerRef.current,
-            style: 'mapbox://styles/mapbox/streets-v12',
-            center: [longitude, latitude],
-            zoom: 12
-          });
-          map.addControl(new mapboxgl.NavigationControl());
-        }
+        const map = new mapboxgl.Map({
+          container: containerRef.current,
+          style: 'mapbox://styles/mapbox/streets-v12',
+          center: [longitude, latitude],
+          zoom: 12
+        });
+        map.addControl(new mapboxgl.NavigationControl());
       } catch (error) {
         console.warn('Mapbox initialization skipped:', error);
       }

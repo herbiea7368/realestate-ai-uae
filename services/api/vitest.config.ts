@@ -5,9 +5,15 @@ export default defineConfig({
     globals: true,
     environment: 'node',
     include: ['src/**/*.spec.ts'],
-    setupFiles: [],
+    setupFiles: ['vitest.setup.ts'],
     coverage: {
+      enabled: true,
       reporter: ['text', 'html'],
+      reportsDirectory: 'coverage',
     },
+  },
+  esbuild: {
+    loader: 'ts',
+    target: 'es2021',
   },
 });
