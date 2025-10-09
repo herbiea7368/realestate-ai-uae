@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://realestate-ai-uae.dev/schemas/permit-check-request.schema.json",
+  "title": "PermitCheckRequest",
+  "type": "object",
+  "required": ["property_id", "market", "trakheesi_number"],
+  "properties": {
+    "property_id": {
+      "type": "string",
+      "description": "Internal property identifier."
+    },
+    "market": {
+      "type": "string",
+      "enum": ["Dubai"],
+      "description": "Market scope; Dubai enforced for initial launch."
+    },
+    "trakheesi_number": {
+      "type": "string",
+      "pattern": "^[0-9]{6}$",
+      "description": "Six-digit DLD Trakheesi permit number."
+    }
+  },
+  "additionalProperties": false
+}

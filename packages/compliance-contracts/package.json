@@ -1,0 +1,15 @@
+{
+  "name": "@realestate-ai-uae/compliance-contracts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared JSON Schemas for compliance interactions.",
+  "files": [
+    "schemas"
+  ],
+  "scripts": {
+    "build": "echo \"No build step\"",
+    "lint": "echo \"No lint step\"",
+    "test": "echo \"No tests for schemas yet\""
+  },
+  "license": "UNLICENSED"
+}

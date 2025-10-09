@@ -1,0 +1,60 @@
+openapi: 3.1.0
+info:
+  title: Listing Writer Stub
+  version: 0.1.0
+servers:
+  - url: http://localhost:8001
+paths:
+  /nlp/listing-writer:
+    post:
+      summary: Generate compliant bilingual listing draft
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../../packages/compliance-contracts/schemas/listing-writer-request.schema.json
+      responses:
+        "200":
+          description: Listing writer response
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [description, language, permit_status, compliance, generated_at]
+                properties:
+                  description:
+                    type: string
+                  language:
+                    type: string
+                    enum: [en, ar]
+                  permit_status:
+                    $ref: ../../packages/compliance-contracts/schemas/permit-status-response.schema.json
+                  compliance:
+                    type: object
+                    additionalProperties: true
+                  generated_at:
+                    type: string
+                    format: date-time
+        "409":
+          description: Permit validation failure
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [detail]
+                properties:
+                  detail:
+                    type: object
+                    required: [message, errors, status]
+                    properties:
+                      message:
+                        type: string
+                      errors:
+                        type: array
+                        items:
+                          type: string
+                      status:
+                        type: string
+                        enum: [expired, suspended, not_found]
+
