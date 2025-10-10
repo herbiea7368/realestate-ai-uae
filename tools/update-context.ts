@@ -46,15 +46,27 @@ const entry: ContextEntry = {
 };
 
 const logPath = resolve(process.cwd(), 'tools', 'context-log.json');
-let log: ContextEntry[] = [];
+let entries: ContextEntry[] = [];
+let writeAsObject = true;
 
 try {
-  const existing = readFileSync(logPath, 'utf8');
-  log = existing ? (JSON.parse(existing) as ContextEntry[]) : [];
-} catch (error) {
-  log = [];
+  const existingRaw = readFileSync(logPath, 'utf8');
+  if (existingRaw) {
+    const parsed = JSON.parse(existingRaw) as ContextEntry[] | { entries: ContextEntry[] };
+    if (Array.isArray(parsed)) {
+      entries = parsed;
+      writeAsObject = false;
+    } else if (Array.isArray(parsed.entries)) {
+      entries = parsed.entries;
+      writeAsObject = true;
+    }
+  }
+} catch {
+  entries = [];
+  writeAsObject = true;
 }
 
-log.push(entry);
-writeFileSync(logPath, JSON.stringify(log, null, 2) + '\n', 'utf8');
+entries.push(entry);
+const payload = writeAsObject ? { entries } : entries;
+writeFileSync(logPath, JSON.stringify(payload, null, 2) + '\n', 'utf8');
 console.log(`Context updated with task: ${task}`);

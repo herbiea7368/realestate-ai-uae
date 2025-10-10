@@ -49,6 +49,110 @@
       ],
       "validation": "cmd.exe /C \"pnpm --filter @realestate-ai-uae/api test\" && cmd.exe /C \"pnpm --filter @realestate-ai-uae/web build\"",
       "next": "Harden PDPL consent ledger stubs and wire full e2e coverage."
+    },
+    {
+      "ts": "2025-10-10T10:29:36.932Z",
+      "task": "Task 0 – Repo sync",
+      "commits": [],
+      "links": [],
+      "validation": "Verified main is current",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-10T10:30:52.057Z",
+      "task": "Task 1 – Web i18n",
+      "commits": [],
+      "links": [
+        "apps/web/app/add-listing/page.tsx",
+        "apps/web/messages/en.json",
+        "apps/web/messages/ar.json"
+      ],
+      "validation": "Localized UI wiring",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-10T10:31:19.575Z",
+      "task": "Task 2 – API i18n",
+      "commits": [],
+      "links": [
+        "services/api/src/i18n.ts",
+        "services/api/src/permits/controller.ts",
+        "services/api/src/listing-writer/controller.ts"
+      ],
+      "validation": "API messages localized",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-10T10:32:10.320Z",
+      "task": "Task 3 – PDPL ledger",
+      "commits": [],
+      "links": [
+        "services/api/src/pdpl/controller.ts",
+        "services/api/src/pdpl/service.ts",
+        "services/api/test/pdpl.e2e.test.ts"
+      ],
+      "validation": "Ledger stub storing consent",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-10T10:32:38.307Z",
+      "task": "Task 4 – PDPL UI",
+      "commits": [],
+      "links": [
+        "apps/web/app/add-listing/page.tsx"
+      ],
+      "validation": "Consent gate enforced",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-10T10:36:27.616Z",
+      "task": "Task 5 – Playwright smoke",
+      "commits": [],
+      "links": [
+        "playwright.config.ts",
+        "tests/e2e/addListing.spec.ts"
+      ],
+      "validation": "Smoke test scaffolded",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-10T10:36:49.152Z",
+      "task": "Task 5 – Playwright smoke",
+      "commits": [],
+      "links": [
+        "playwright.config.ts",
+        "tests/e2e/addListing.spec.ts"
+      ],
+      "validation": "Smoke test scaffolded",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-10T10:37:17.080Z",
+      "task": "Task 6 – CI update",
+      "commits": [],
+      "links": [
+        ".github/workflows/ci.yml"
+      ],
+      "validation": "CI installing browsers & smoke",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-10T12:32:27.598Z",
+      "task": "Stage 3 – i18n + PDPL consent + Playwright",
+      "commits": [
+        "8da7b00",
+        "4d68872",
+        "8efa41e",
+        "22c963f"
+      ],
+      "links": [
+        "https://github.com/herbiea7368/realestate-ai-uae/tree/main/apps/web/app/add-listing",
+        "https://github.com/herbiea7368/realestate-ai-uae/tree/main/services/api/src/pdpl",
+        "https://github.com/herbiea7368/realestate-ai-uae/blob/main/.github/workflows/ci.yml",
+        "https://github.com/herbiea7368/realestate-ai-uae/tree/main/tests/e2e"
+      ],
+      "validation": "Localized UI verified in EN/AR; consent ledger stub active; CI running headless Playwright smoke.",
+      "next": "Stage 4 – integrate auth (JWT stub) and user profiles; connect ML-bridge FastAPI for valuation stub."
     }
   ]
 }
