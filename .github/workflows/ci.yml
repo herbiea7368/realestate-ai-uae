@@ -5,17 +5,31 @@ on:
   pull_request:
 
 jobs:
-  build:
+  quality:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
+        with:
+          version: 10.18.1
       - uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
           cache: 'pnpm'
-      - run: pnpm install || true
-      - run: pnpm -r run lint || true
-      - run: pnpm -r run build || true
-      - run: pnpm -r run test || true
-
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Lint API
+        run: pnpm --filter @realestate-ai-uae/api lint
+      - name: Test API
+        run: pnpm --filter @realestate-ai-uae/api test
+      - name: Build web app
+        run: pnpm --filter @realestate-ai-uae/web build
+      - name: Upload API test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-test-artifacts
+          path: |
+            services/api/coverage/**
+            services/api/coverage/junit.xml
+          if-no-files-found: ignore
