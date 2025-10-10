@@ -10,6 +10,7 @@ import pdplRouter from './pdpl/controller';
 import authRouter from './auth/controller';
 import profileRouter from './profile/controller';
 import { optionalAuth, requireAuth } from './auth/middleware';
+import { createAuditMiddleware } from './audit/audit.middleware';
 
 const app = express();
 
@@ -42,8 +43,8 @@ app.get('/health', (_req, res) => {
 
 app.use('/auth', authRouter);
 app.use(optionalAuth);
-app.use('/permits', permitsRouter);
-app.use('/nlp/listing-writer', requireAuth, listingWriterRouter);
+app.use('/permits', createAuditMiddleware('permits'), permitsRouter);
+app.use('/nlp/listing-writer', requireAuth, createAuditMiddleware('nlp/listing-writer'), listingWriterRouter);
 app.use('/profile', profileRouter);
 app.use('/pdpl', pdplRouter);
 

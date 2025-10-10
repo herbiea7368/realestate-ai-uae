@@ -17,7 +17,8 @@ module.exports = [
       },
       globals: {
         console: 'readonly',
-        process: 'readonly'
+        process: 'readonly',
+        __dirname: 'readonly'
       }
     },
     plugins: {
