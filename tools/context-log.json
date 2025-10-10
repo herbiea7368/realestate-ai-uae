@@ -153,6 +153,18 @@
       ],
       "validation": "Localized UI verified in EN/AR; consent ledger stub active; CI running headless Playwright smoke.",
       "next": "Stage 4 – integrate auth (JWT stub) and user profiles; connect ML-bridge FastAPI for valuation stub."
+    },
+    {
+      "ts": "2025-10-10T15:22:59.297Z",
+      "task": "Stage 4 – Auth + Profiles + ML Bridge",
+      "commits": [
+        "ee44a7d 3a8f3fc 35b640a 0dee0db 39b7220 435e44f"
+      ],
+      "links": [
+        "services/api/src/auth apps/web/app/login/page.tsx services/ml-bridge/app/main.py docker-compose.yml .github/workflows/ci.yml"
+      ],
+      "validation": "pnpm lint && pnpm typecheck && pnpm test && py -3.11 -m pytest && pnpm test:e2e",
+      "next": "Stage 5 – Trakheesi provider adapter interface, caching strategy, rate limits, and audit logging."
     }
   ]
 }
