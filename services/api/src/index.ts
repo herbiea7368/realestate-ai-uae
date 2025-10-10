@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+import rateLimit from 'express-rate-limit';
 
 import permitsRouter from './permits/controller';
 import listingWriterRouter from './listing-writer/controller';
@@ -23,6 +24,15 @@ app.use(
     credentials: true
   })
 );
+
+const requestsPerMinute = Number(process.env.RATE_LIMIT_PER_MINUTE ?? 30);
+const limiter = rateLimit({
+  windowMs: 60_000,
+  limit: Number.isFinite(requestsPerMinute) && requestsPerMinute > 0 ? requestsPerMinute : 30,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false
+});
+app.use(limiter);
 app.use(express.json());
 app.use(cookieParser());
 

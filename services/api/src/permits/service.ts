@@ -1,51 +1,63 @@
-import { PermitRecord } from '../types';
+import { getProvider } from './provider.factory';
+import type { PermitRecord } from '../types';
+import * as cache from '../cache';
 
-const permitCache = new Map<string, PermitRecord>();
-const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+const CACHE_PREFIX = 'permits:trakheesi:';
+const TTL_SECONDS = 7 * 24 * 60 * 60;
 
-function computePermit(trakheesi: string): PermitRecord {
-  const normalized = trakheesi.trim();
-  const isEightDigits = /^\d{8}$/.test(normalized);
-  if (!isEightDigits) {
-    return { status: 'invalid', expiresAt: 0 };
-  }
-  if (normalized.endsWith('0')) {
-    return { status: 'invalid', expiresAt: 0 };
-  }
-  const expiresAt = Date.now() + SEVEN_DAYS_MS;
-  return { status: 'valid', expiresAt };
+export interface PermitResult extends PermitRecord {
+  source: 'cache' | 'provider';
 }
 
-export function checkPermit(trakheesi: string): PermitRecord {
-  const record = computePermit(trakheesi);
-  permitCache.set(trakheesi, record);
+const provider = getProvider();
+
+function normalize(trakheesi: string): string {
+  return trakheesi.trim();
+}
+
+function cacheKey(trakheesi: string): string {
+  return `${CACHE_PREFIX}${trakheesi}`;
+}
+
+function applyExpiry(record: PermitRecord): PermitRecord {
+  if (record.status === 'valid' && record.expiresAt <= Date.now()) {
+    return {
+      status: 'expired',
+      expiresAt: record.expiresAt
+    };
+  }
   return record;
 }
 
-export function getPermit(trakheesi: string): PermitRecord {
-  const cached = permitCache.get(trakheesi);
+export async function checkPermit(trakheesi: string): Promise<PermitResult> {
+  const normalized = normalize(trakheesi);
+  const verified = await provider.verify(normalized);
+  const record = applyExpiry(verified);
+  await cache.set(cacheKey(normalized), record, TTL_SECONDS);
+  return { ...record, source: 'provider' };
+}
+
+export async function getPermit(trakheesi: string): Promise<PermitResult> {
+  const normalized = normalize(trakheesi);
+  const key = cacheKey(normalized);
+  const cached = await cache.get<PermitRecord>(key);
+
   if (cached) {
-    if (cached.status === 'valid' && cached.expiresAt <= Date.now()) {
-      const expired: PermitRecord = { status: 'expired', expiresAt: cached.expiresAt };
-      permitCache.set(trakheesi, expired);
-      return expired;
+    const record = applyExpiry(cached);
+    if (record !== cached) {
+      await cache.set(key, record, TTL_SECONDS);
     }
-    return cached;
+    return { ...record, source: 'cache' };
   }
-  const computed = computePermit(trakheesi);
-  permitCache.set(trakheesi, computed);
-  if (computed.status === 'valid' && computed.expiresAt <= Date.now()) {
-    const expired: PermitRecord = { status: 'expired', expiresAt: computed.expiresAt };
-    permitCache.set(trakheesi, expired);
-    return expired;
-  }
-  return computed;
+
+  return checkPermit(normalized);
 }
 
-export function clearPermitCache(): void {
-  permitCache.clear();
+export async function clearPermitCache(): Promise<void> {
+  await cache.flush(CACHE_PREFIX);
 }
 
-export function seedPermit(trakheesi: string, record: PermitRecord): void {
-  permitCache.set(trakheesi, record);
+export async function seedPermit(trakheesi: string, record: PermitRecord): Promise<void> {
+  const normalized = normalize(trakheesi);
+  await cache.set(cacheKey(normalized), record, TTL_SECONDS);
 }

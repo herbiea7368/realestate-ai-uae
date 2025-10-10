@@ -17,8 +17,8 @@ async function loginDefaultAgent() {
 }
 
 describe('listing writer endpoint', () => {
-  beforeEach(() => {
-    clearPermitCache();
+  beforeEach(async () => {
+    await clearPermitCache();
   });
 
   it('returns deterministic copy for valid permits', async () => {
@@ -67,7 +67,7 @@ describe('listing writer endpoint', () => {
     expect(invalidResponse.body.message).toBe('Permit must be valid before generating copy.');
 
     const trakheesi = '88887777';
-    seedPermit(trakheesi, { status: 'valid', expiresAt: Date.now() - 10 });
+    await seedPermit(trakheesi, { status: 'valid', expiresAt: Date.now() - 10 });
 
     const expiredResponse = await request(app)
       .post('/nlp/listing-writer')

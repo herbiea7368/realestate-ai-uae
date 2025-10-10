@@ -12,7 +12,7 @@ const requestSchema = z.object({
   language: z.enum(['en', 'ar']).default('en')
 });
 
-listingWriterRouter.post('/', (req, res) => {
+listingWriterRouter.post('/', async (req, res) => {
   const lang = resolveLanguage(req.query.lang);
   const parsed = requestSchema.safeParse(req.body);
   if (!parsed.success) {
@@ -20,7 +20,7 @@ listingWriterRouter.post('/', (req, res) => {
   }
 
   const { trakheesi_number, language, titleHints, features } = parsed.data;
-  const permit = getPermit(trakheesi_number);
+  const permit = await getPermit(trakheesi_number);
   if (permit.status !== 'valid') {
     return res.status(422).json({
       error: 'permit_not_valid',
