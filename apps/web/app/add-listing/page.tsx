@@ -1,6 +1,7 @@
 'use client';
 
 import { ChangeEvent, FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 type Banner =
@@ -9,6 +10,7 @@ type Banner =
   | null;
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4001';
+const TOKEN_STORAGE_KEY = 'id_token';
 const CONSENT_STORAGE_KEY = 'pdpl-consent';
 const USER_ID_STORAGE_KEY = 'pdpl-user-id';
 
@@ -18,6 +20,7 @@ const LANGUAGE_OPTIONS: Array<{ value: 'en' | 'ar'; label: string }> = [
 ];
 
 export default function AddListingPage() {
+  const router = useRouter();
   const [trakheesi, setTrakheesi] = useState('');
   const [language, setLanguage] = useState<'en' | 'ar'>('en');
   const [features, setFeatures] = useState('');
@@ -28,10 +31,26 @@ export default function AddListingPage() {
   const [consentInitialized, setConsentInitialized] = useState(false);
   const [consentSubmitting, setConsentSubmitting] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
 
   const t = useTranslations(language);
   const direction = language === 'ar' ? 'rtl' : 'ltr';
   const langAttr = language;
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const storedToken = window.localStorage.getItem(TOKEN_STORAGE_KEY);
+    if (!storedToken) {
+      setAuthChecked(true);
+      router.replace('/login?redirect=/add-listing');
+      return;
+    }
+    setToken(storedToken);
+    setAuthChecked(true);
+  }, [router]);
 
   useEffect(() => {
     if (typeof window === 'undefined' || process.env.NODE_ENV === 'production') {
@@ -67,14 +86,20 @@ export default function AddListingPage() {
     const ensureUserId =
       userId ??
       (typeof window !== 'undefined' && window.crypto?.randomUUID ? window.crypto.randomUUID() : `anon-${Date.now()}`);
+    const activeToken =
+      token ?? (typeof window !== 'undefined' ? window.localStorage.getItem(TOKEN_STORAGE_KEY) : null);
 
     setConsentSubmitting(true);
     try {
       setUserId(ensureUserId);
       setHasConsent(nextConsent);
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (activeToken) {
+        headers.Authorization = `Bearer ${activeToken}`;
+      }
       const response = await fetch(`${API_URL}/pdpl/consent`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ userId: ensureUserId, consent: nextConsent })
       });
 
@@ -106,10 +131,24 @@ export default function AddListingPage() {
   const processSubmission = useCallback(async (): Promise<void> => {
     setLoading(true);
 
+    const activeToken =
+      token ?? (typeof window !== 'undefined' ? window.localStorage.getItem(TOKEN_STORAGE_KEY) : null);
+
+    if (!activeToken) {
+      setLoading(false);
+      router.replace('/login?redirect=/add-listing');
+      return;
+    }
+
     try {
+      const authHeaders = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${activeToken}`
+      } as Record<string, string>;
+
       const permitResponse = await fetch(`${API_URL}/permits/check?lang=${language}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders,
         body: JSON.stringify({ trakheesi_number: trakheesi.trim() })
       });
 
@@ -130,7 +169,7 @@ export default function AddListingPage() {
 
       const writerResponse = await fetch(`${API_URL}/nlp/listing-writer?lang=${language}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders,
         body: JSON.stringify({
           trakheesi_number: trakheesi.trim(),
           language,
@@ -138,6 +177,13 @@ export default function AddListingPage() {
           features: parsedFeatures
         })
       });
+
+      if (writerResponse.status === 401) {
+        window.localStorage.removeItem(TOKEN_STORAGE_KEY);
+        setToken(null);
+        router.replace('/login?redirect=/add-listing');
+        return;
+      }
 
       if (!writerResponse.ok) {
         const payload = await writerResponse.json().catch(() => ({}));
@@ -165,7 +211,7 @@ export default function AddListingPage() {
     } finally {
       setLoading(false);
     }
-  }, [language, parsedFeatures, t, trakheesi, titleHints]);
+  }, [language, parsedFeatures, router, t, token, trakheesi, titleHints]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -209,6 +255,14 @@ export default function AddListingPage() {
     };
   }, [hasConsent, processSubmission, t, trakheesi]);
 
+  if (!authChecked) {
+    return (
+      <main dir={direction} lang={langAttr}>
+        <p>Checking authentication…</p>
+      </main>
+    );
+  }
+
   return (
     <main dir={direction} lang={langAttr}>
       <h1>{t('title')}</h1>
@@ -233,7 +287,7 @@ export default function AddListingPage() {
           </p>
         )}
 
-        <fieldset disabled={!hasConsent || loading}>
+        <fieldset disabled={!hasConsent || loading || !token}>
           <label htmlFor="trakheesi">{t('trakheesi')}</label>
           <input
             id="trakheesi"
