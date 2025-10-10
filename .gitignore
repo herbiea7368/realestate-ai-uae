@@ -5,6 +5,7 @@ dist/
 coverage/
 .env
 .env.*
+!.env.example
 *.log
 logs/*.log
 .pytest_cache/
@@ -21,3 +22,6 @@ pip-wheel-metadata/
 out/
 artifacts/
 *.swp
+test-results/
+*.egg-info/
+
