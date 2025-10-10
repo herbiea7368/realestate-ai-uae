@@ -4,6 +4,7 @@ import helmet from 'helmet';
 
 import permitsRouter from './permits/controller';
 import listingWriterRouter from './listing-writer/controller';
+import pdplRouter from './pdpl/controller';
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.get('/health', (_req, res) => {
 
 app.use('/permits', permitsRouter);
 app.use('/nlp/listing-writer', listingWriterRouter);
+app.use('/pdpl', pdplRouter);
 
 const port = Number(process.env.PORT ?? 4001);
 
