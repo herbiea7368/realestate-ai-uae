@@ -4,7 +4,12 @@ test('smoke: user can validate permit and generate copy', async ({ page }) => {
   page.on('console', (message) => {
     console.log('[browser]', message.type().toUpperCase(), message.text());
   });
-  await page.goto('/add-listing');
+  await page.goto('/login');
+
+  await page.getByLabel('Email').fill('agent@example.com');
+  await page.getByLabel('Password').fill('secret12');
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.waitForURL('**/add-listing', { timeout: 30_000 });
 
   const consent = page.getByLabel('Consent to data use');
   await consent.waitFor({ state: 'visible' });

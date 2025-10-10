@@ -20,7 +20,8 @@ export default defineConfig({
       stdout: 'pipe',
       stderr: 'pipe',
       env: {
-        PORT: '4001'
+        PORT: '4001',
+        API_JWT_SECRET: 'playwright-secret'
       }
     },
     {
