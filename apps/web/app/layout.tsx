@@ -1,9 +1,13 @@
+import type { ReactNode } from 'react';
 import './styles.css';
+import { IntlProviders } from './providers';
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <IntlProviders>{children}</IntlProviders>
+      </body>
     </html>
   );
 }

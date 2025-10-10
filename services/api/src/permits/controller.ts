@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
+import { resolveLanguage, translate } from '../i18n';
+import type { SupportedLang } from '../i18n';
 import { checkPermit, getPermit } from './service';
 
 const payloadSchema = z.object({
@@ -8,22 +10,37 @@ const payloadSchema = z.object({
 
 const permitsRouter = Router();
 
+function serializePermit(
+  trakheesi_number: string,
+  data: ReturnType<typeof checkPermit> | ReturnType<typeof getPermit>,
+  lang: SupportedLang
+) {
+  return {
+    trakheesi_number,
+    status: data.status,
+    expiresAt: data.expiresAt,
+    message: translate(lang, `permits.${data.status}`)
+  };
+}
+
 permitsRouter.post('/check', (req, res) => {
+  const lang = resolveLanguage(req.query.lang);
   const parsed = payloadSchema.safeParse(req.body);
   if (!parsed.success) {
     return res.status(400).json({ error: 'invalid_payload' });
   }
   const result = checkPermit(parsed.data.trakheesi_number);
-  return res.json(result);
+  return res.json(serializePermit(parsed.data.trakheesi_number, result, lang));
 });
 
 permitsRouter.get('/status', (req, res) => {
+  const lang = resolveLanguage(req.query.lang);
   const trakheesi = typeof req.query.trakheesi === 'string' ? req.query.trakheesi : '';
   if (!trakheesi) {
     return res.status(400).json({ error: 'missing_trakheesi' });
   }
   const result = getPermit(trakheesi);
-  return res.json(result);
+  return res.json(serializePermit(trakheesi, result, lang));
 });
 
 export default permitsRouter;

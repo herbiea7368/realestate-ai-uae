@@ -1,0 +1,19 @@
+{
+  "title": "Add Listing",
+  "subtitle": "Validate the Trakheesi permit before generating marketing copy.",
+  "trakheesi": "Trakheesi Number",
+  "language": "Language",
+  "titleHint": "Title hint",
+  "features": "Features (comma separated)",
+  "consent": "Consent to data use",
+  "submit": "Validate & Generate",
+  "checking": "Checking...",
+  "successLabel": "Generated copy:",
+  "errorLabel": "Action required:",
+  "error": "Permit Invalid or Expired",
+  "trakheesiPlaceholder": "00000000",
+  "titlePlaceholder": "Luxury 2BR in Dubai Marina",
+  "featuresPlaceholder": "Pool, Sea view",
+  "consentRequired": "Consent required to proceed.",
+  "enterTrakheesi": "Enter an 8-digit Trakheesi number."
+}
