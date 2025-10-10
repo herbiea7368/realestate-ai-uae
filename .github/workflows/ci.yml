@@ -16,18 +16,31 @@ jobs:
         with:
           node-version: 'lts/*'
           cache: 'pnpm'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Lint API
-        run: pnpm --filter @realestate-ai-uae/api lint
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e services/ml-bridge[dev]
+      - name: Lint
+        run: pnpm lint
       - name: Test API
-        run: pnpm --filter @realestate-ai-uae/api test
+        run: pnpm test
+      - name: Test ML bridge
+        run: python -m pytest services/ml-bridge/tests
+      - name: Typecheck
+        run: pnpm typecheck
       - name: Build web app
         run: pnpm --filter @realestate-ai-uae/web build
       - name: Install Playwright browsers
         run: pnpm playwright:install
       - name: Playwright smoke test
-        run: npx playwright test --reporter=line || true
+        env:
+          PLAYWRIGHT_BASE_URL: http://localhost:3000
+        run: pnpm test:e2e
       - name: Upload API test artifacts
         if: always()
         uses: actions/upload-artifact@v4
