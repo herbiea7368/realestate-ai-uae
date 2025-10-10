@@ -1,10 +1,21 @@
 {
   "name": "realestate-ai-uae",
   "private": true,
+  "scripts": {
+    "lint": "pnpm --filter @realestate-ai-uae/api lint && pnpm --filter @realestate-ai-uae/web lint",
+    "test": "pnpm --filter @realestate-ai-uae/api test",
+    "typecheck": "pnpm --filter @realestate-ai-uae/api typecheck && pnpm --filter @realestate-ai-uae/web typecheck",
+    "test:e2e": "playwright test --reporter=line",
+    "playwright:install": "playwright install --with-deps"
+  },
   "workspaces": [
     "apps/*",
     "services/*",
     "packages/*",
     "tools"
-  ]
+  ],
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "tsx": "^4.20.6"
+  }
 }
