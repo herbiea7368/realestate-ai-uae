@@ -29,7 +29,14 @@ permitsRouter.post('/check', (req, res) => {
   if (!parsed.success) {
     return res.status(400).json({ error: 'invalid_payload' });
   }
+  const userId = req.user?.sub ?? null;
   const result = checkPermit(parsed.data.trakheesi_number);
+  // Simple compliance log for audit and TDRA traceability
+  console.info('[permits.check]', {
+    trakheesi: parsed.data.trakheesi_number,
+    userId,
+    consented: Boolean(req.user)
+  });
   return res.json(serializePermit(parsed.data.trakheesi_number, result, lang));
 });
 

@@ -2,6 +2,20 @@ import request from 'supertest';
 import app from '../src/index';
 import { clearPermitCache, seedPermit } from '../src/permits/service';
 
+async function loginDefaultAgent() {
+  const loginResponse = await request(app)
+    .post('/auth/login')
+    .send({ email: 'agent@example.com', password: 'secret12' });
+
+  if (loginResponse.status !== 200) {
+    throw new Error(
+      `expected default agent login to succeed, got ${loginResponse.status} ${JSON.stringify(loginResponse.body)}`
+    );
+  }
+
+  return loginResponse.body.token as string;
+}
+
 describe('listing writer endpoint', () => {
   beforeEach(() => {
     clearPermitCache();
@@ -13,6 +27,8 @@ describe('listing writer endpoint', () => {
       .query({ lang: 'en' })
       .send({ trakheesi_number: '11112222' });
 
+    const token = await loginDefaultAgent();
+
     const response = await request(app)
       .post('/nlp/listing-writer')
       .query({ lang: 'en' })
@@ -21,7 +37,8 @@ describe('listing writer endpoint', () => {
         features: ['pool', 'sea view'],
         language: 'en',
         titleHints: 'Luxury 2BR'
-      });
+      })
+      .set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject({
@@ -34,13 +51,16 @@ describe('listing writer endpoint', () => {
   });
 
   it('blocks requests when permit is invalid or expired', async () => {
+    const token = await loginDefaultAgent();
+
     const invalidResponse = await request(app)
       .post('/nlp/listing-writer')
       .query({ lang: 'en' })
       .send({
         trakheesi_number: '11112220',
         language: 'en'
-      });
+      })
+      .set('Authorization', `Bearer ${token}`);
 
     expect(invalidResponse.status).toBe(422);
     expect(invalidResponse.body.error).toBe('permit_not_valid');
@@ -55,7 +75,8 @@ describe('listing writer endpoint', () => {
       .send({
         trakheesi_number: trakheesi,
         language: 'en'
-      });
+      })
+      .set('Authorization', `Bearer ${token}`);
 
     expect(expiredResponse.status).toBe(422);
     expect(expiredResponse.body.status).toBe('expired');

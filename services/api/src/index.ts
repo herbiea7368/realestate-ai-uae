@@ -1,23 +1,40 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 
 import permitsRouter from './permits/controller';
 import listingWriterRouter from './listing-writer/controller';
 import pdplRouter from './pdpl/controller';
+import authRouter from './auth/controller';
+import profileRouter from './profile/controller';
+import { optionalAuth, requireAuth } from './auth/middleware';
 
 const app = express();
 
 app.use(helmet());
-app.use(cors());
+const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS
+  ?.split(',')
+  .map((value) => value.trim())
+  .filter(Boolean);
+app.use(
+  cors({
+    origin: allowedOrigins && allowedOrigins.length > 0 ? allowedOrigins : true,
+    credentials: true
+  })
+);
 app.use(express.json());
+app.use(cookieParser());
 
 app.get('/health', (_req, res) => {
   res.json({ ok: true });
 });
 
+app.use('/auth', authRouter);
+app.use(optionalAuth);
 app.use('/permits', permitsRouter);
-app.use('/nlp/listing-writer', listingWriterRouter);
+app.use('/nlp/listing-writer', requireAuth, listingWriterRouter);
+app.use('/profile', profileRouter);
 app.use('/pdpl', pdplRouter);
 
 const port = Number(process.env.PORT ?? 4001);
