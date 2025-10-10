@@ -1,19 +1,10 @@
 {
   "name": "realestate-ai-uae",
-  "version": "0.1.0",
   "private": true,
-  "license": "MIT",
-  "packageManager": "pnpm@9.10.0",
-  "scripts": {
-    "dev:web": "pnpm --filter @realestate-ai-uae/web dev",
-    "dev:api": "pnpm --filter @realestate-ai-uae/api start:dev",
-    "dev:ml": "pnpm --filter @realestate-ai-uae/ml-bridge dev",
-    "build": "pnpm recursive run build",
-    "lint": "pnpm recursive run lint",
-    "test": "pnpm recursive run test",
-    "test:e2e": "pnpm --filter @realestate-ai-uae/api test:e2e"
-  },
-  "devDependencies": {
-    "tsx": "^4.7.2"
-  }
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*",
+    "tools"
+  ]
 }

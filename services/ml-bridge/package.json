@@ -1,0 +1,9 @@
+{
+  "name": "@realestate-ai-uae/ml-bridge",
+  "private": true,
+  "scripts": {
+    "build": "echo build ml-bridge",
+    "lint": "echo lint ml-bridge",
+    "test": "echo test ml-bridge"
+  }
+}
