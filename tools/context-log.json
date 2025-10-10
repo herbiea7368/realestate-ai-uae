@@ -32,6 +32,23 @@
       ],
       "validation": "Scaffold staged locally; push requires valid GitHub credentials.",
       "next": "Implement permits module and listing-writer stub with tests."
+    },
+    {
+      "ts": "2025-10-10T06:53:09.927858Z",
+      "task": "Express permits API + Next.js listing form + CI artifacts",
+      "commits": [
+        "837577f",
+        "507ead5",
+        "85ea828"
+      ],
+      "links": [
+        "services/api/src/index.ts",
+        "services/api/src/permits/service.ts",
+        "apps/web/app/add-listing/page.tsx",
+        ".github/workflows/ci.yml"
+      ],
+      "validation": "cmd.exe /C \"pnpm --filter @realestate-ai-uae/api test\" && cmd.exe /C \"pnpm --filter @realestate-ai-uae/web build\"",
+      "next": "Harden PDPL consent ledger stubs and wire full e2e coverage."
     }
   ]
 }
