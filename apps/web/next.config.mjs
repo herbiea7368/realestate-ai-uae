@@ -1,16 +1,6 @@
-import createNextIntlPlugin from 'next-intl/plugin';
-
-const withNextIntl = createNextIntlPlugin({
-  locales: ['en', 'ar'],
-  defaultLocale: 'en'
-});
-
+/** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  transpilePackages: ['@realestate-ai-uae/ui'],
-  experimental: {
-    typedRoutes: true
-  }
+  reactStrictMode: true
 };
 
-export default withNextIntl(nextConfig);
+export default nextConfig;
