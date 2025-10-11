@@ -7,6 +7,20 @@ on:
 jobs:
   quality:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: realestate
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -28,7 +42,9 @@ jobs:
       - name: Lint
         run: pnpm lint
       - name: Test API
-        run: pnpm test
+        run: pnpm --filter @realestate-ai-uae/api test
+      - name: Test Search service
+        run: pnpm --filter @realestate-ai-uae/search test
       - name: Test ML bridge
         run: python -m pytest services/ml-bridge/tests
       - name: Typecheck
@@ -56,4 +72,11 @@ jobs:
           path: |
             services/api/coverage/**
             services/api/coverage/junit.xml
+          if-no-files-found: ignore
+      - name: Upload search test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: search-test-artifacts
+          path: services/search/junit.xml
           if-no-files-found: ignore
