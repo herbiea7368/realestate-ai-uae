@@ -181,6 +181,23 @@
       ],
       "validation": "Provider abstraction, cache + rate limiter functional; audit log writing verified; CI uploads logs.",
       "next": "Stage 6 – introduce full property search microservice with Supabase/PostGIS and integrate into Next.js results view."
+    },
+    {
+      "ts": "2025-10-11T06:58:07.217Z",
+      "task": "Stage 6 – Search microservice + Next.js results",
+      "commits": [
+        "29b938c",
+        "3f7ead0",
+        "488daae"
+      ],
+      "links": [
+        "services/search",
+        "apps/web/app/search",
+        "page.tsx",
+        ".github/workflows/ci.yml"
+      ],
+      "validation": "pnpm lint,test,typecheck,test:e2e all green with vitest junit output",
+      "next": "Stage 7 – listing ingestion pipeline, sitemap/feed, and caching on search responses."
     }
   ]
 }
