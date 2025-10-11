@@ -198,6 +198,147 @@
       ],
       "validation": "pnpm lint,test,typecheck,test:e2e all green with vitest junit output",
       "next": "Stage 7 – listing ingestion pipeline, sitemap/feed, and caching on search responses."
+    },
+    {
+      "ts": "2025-10-11T08:00:33.317Z",
+      "task": "Stage 7 – Listing ingestion, sitemap, and search caching",
+      "commits": [],
+      "links": [
+        "https://github.com/herbiea7368/realestate-ai-uae/tree/main/services/ingestion",
+        "https://github.com/herbiea7368/realestate-ai-uae/tree/main/services/search/src/routes",
+        "https://github.com/herbiea7368/realestate-ai-uae/blob/main/.github/workflows/ingest.yml"
+      ],
+      "validation": "Ingestion inserts listings; sitemap and JSON feed reachable; caching active; CI cron triggers ingestion.",
+      "next": "Stage 8 – Analytics and performance metrics dashboard with Prometheus, Grafana, and per-service SLO alerts."
+    },
+    {
+      "ts": "2025-10-11T10:16:31.775Z",
+      "task": "Stage8-Task0",
+      "commits": [],
+      "links": [
+        ".env.example"
+      ],
+      "validation": "Git pull blocked by local changes; metrics env toggles appended.",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-11T10:22:44.315Z",
+      "task": "Stage8-Task1",
+      "commits": [],
+      "links": [
+        "services/api/src/index.ts",
+        "services/api/src/metrics.ts",
+        "services/api/test/metrics.test.ts"
+      ],
+      "validation": "API service exports Prometheus metrics with per-route histograms and tests.",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-11T10:23:06.759Z",
+      "task": "Stage8-Task2",
+      "commits": [],
+      "links": [
+        "services/search/src/index.ts",
+        "services/search/src/metrics.ts",
+        "services/search/test/metrics.test.ts"
+      ],
+      "validation": "Search service exposes Prometheus metrics for request latency and counts.",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-11T10:23:26.588Z",
+      "task": "Stage8-Task3",
+      "commits": [],
+      "links": [
+        "services/ingestion/src/index.ts",
+        "services/ingestion/src/metrics.ts",
+        "services/ingestion/test/ingestion.e2e.test.ts"
+      ],
+      "validation": "Ingestion pipeline records run outcomes, rows written, and serves metrics.",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-11T10:26:38.298Z",
+      "task": "Stage8-Task4",
+      "commits": [],
+      "links": [
+        "docker-compose.metrics.yml"
+      ],
+      "validation": "docker-compose.metrics.yml provisions Prometheus, Alertmanager, and Grafana.",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-11T10:27:04.850Z",
+      "task": "Stage8-Task5",
+      "commits": [],
+      "links": [
+        "infra/metrics/prometheus.yml"
+      ],
+      "validation": "Prometheus config scrapes API, Search, and Ingestion with alert rule inclusion.",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-11T10:27:29.444Z",
+      "task": "Stage8-Task6",
+      "commits": [],
+      "links": [
+        "infra/metrics/alerts.yml"
+      ],
+      "validation": "Alert rules cover API/Search latency, availability, and error rates.",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-11T10:27:54.797Z",
+      "task": "Stage8-Task7",
+      "commits": [],
+      "links": [
+        "infra/metrics/alertmanager.yml"
+      ],
+      "validation": "Alertmanager routes grouped alerts to webhook receiver with repeat guard.",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-11T10:28:18.577Z",
+      "task": "Stage8-Task8",
+      "commits": [],
+      "links": [
+        "infra/metrics/grafana/provisioning/datasources/datasource.yml",
+        "infra/metrics/grafana/provisioning/dashboards/dashboard.yml",
+        "infra/metrics/grafana/dashboards/core.json"
+      ],
+      "validation": "Grafana datasource and Core SLO dashboard provisioned.",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-11T10:31:30.841Z",
+      "task": "Stage8-Task9",
+      "commits": [],
+      "links": [
+        ".github/workflows/ci.yml",
+        "tools/metrics-smoke.ts",
+        "tools/synthetic-check.ts"
+      ],
+      "validation": "CI workflow runs metrics smoke; synthetic probe script added.",
+      "next": ""
+    },
+    {
+      "ts": "2025-10-11T10:43:42.457Z",
+      "task": "Stage8-Task10",
+      "commits": [
+        "d4eee44",
+        "9f9783d",
+        "9556c07"
+      ],
+      "links": [
+        "services/api/src/metrics.ts",
+        "services/search/src/metrics.ts",
+        "services/ingestion/src/metrics.ts",
+        "docker-compose.metrics.yml",
+        "infra/metrics/prometheus.yml",
+        ".github/workflows/ci.yml"
+      ],
+      "validation": "Commits for instrumentation, infra, CI, and context log recorded.",
+      "next": ""
     }
   ]
 }
