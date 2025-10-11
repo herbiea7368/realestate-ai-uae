@@ -45,6 +45,10 @@ jobs:
         run: pnpm --filter @realestate-ai-uae/api test
       - name: Test Search service
         run: pnpm --filter @realestate-ai-uae/search test
+      - name: Test Ingestion service
+        run: pnpm --filter @realestate-ai-uae/ingestion test
+      - name: Metrics smoke checks
+        run: pnpm tsx tools/metrics-smoke.ts
       - name: Test ML bridge
         run: python -m pytest services/ml-bridge/tests
       - name: Typecheck
