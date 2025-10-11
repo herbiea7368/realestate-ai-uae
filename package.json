@@ -2,11 +2,13 @@
   "name": "realestate-ai-uae",
   "private": true,
   "scripts": {
-    "lint": "pnpm --filter @realestate-ai-uae/api lint && pnpm --filter @realestate-ai-uae/web lint",
-    "test": "pnpm --filter @realestate-ai-uae/api test",
-    "typecheck": "pnpm --filter @realestate-ai-uae/api typecheck && pnpm --filter @realestate-ai-uae/web typecheck",
+    "lint": "pnpm --filter @realestate-ai-uae/api lint && pnpm --filter @realestate-ai-uae/search lint && pnpm --filter @realestate-ai-uae/web lint",
+    "test": "pnpm --filter @realestate-ai-uae/api test && pnpm --filter @realestate-ai-uae/search test",
+    "typecheck": "pnpm --filter @realestate-ai-uae/api typecheck && pnpm --filter @realestate-ai-uae/search typecheck && pnpm --filter @realestate-ai-uae/web typecheck",
     "test:e2e": "playwright test --reporter=line",
-    "playwright:install": "playwright install --with-deps"
+    "playwright:install": "playwright install --with-deps",
+    "db:init": "pnpm --filter @realestate-ai-uae/search run db:init",
+    "db:seed": "pnpm --filter @realestate-ai-uae/search run db:seed"
   },
   "workspaces": [
     "apps/*",

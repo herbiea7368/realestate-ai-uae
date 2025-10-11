@@ -24,4 +24,5 @@ artifacts/
 *.swp
 test-results/
 *.egg-info/
+**/junit.xml
 
