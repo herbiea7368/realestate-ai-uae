@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    volumes:
+      - ./infra/metrics/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./infra/metrics/alerts.yml:/etc/prometheus/alerts.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - '9090:9090'
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    restart: unless-stopped
+    volumes:
+      - ./infra/metrics/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    ports:
+      - '9093:9093'
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    restart: unless-stopped
+    ports:
+      - '3001:3000'
+    volumes:
+      - ./infra/metrics/grafana/provisioning:/etc/grafana/provisioning
+      - ./infra/metrics/grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/core.json

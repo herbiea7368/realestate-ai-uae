@@ -1,0 +1,57 @@
+groups:
+  - name: slo-alerts
+    rules:
+      - alert: APIHighLatencyP95
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum(
+              rate(
+                http_request_duration_ms_bucket{route=~"/permits.*|/nlp/listing-writer.*"}[5m]
+              )
+            ) by (le)
+          ) > 300
+        for: 10m
+        labels:
+          severity: page
+          service: api
+        annotations:
+          summary: API P95 latency above 300ms
+          description: Investigate API latency for permits/nlp endpoints.
+
+      - alert: SearchHighLatencyP95
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum(
+              rate(http_request_duration_ms_bucket{route=~"/search.*"}[5m])
+            ) by (le)
+          ) > 800
+        for: 10m
+        labels:
+          severity: page
+          service: search
+        annotations:
+          summary: Search P95 latency exceeds 800ms
+          description: Search service latency breaching defined SLO.
+
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: page
+        annotations:
+          summary: Target endpoint is down
+          description: Prometheus scrape target reported as down for over 1m.
+
+      - alert: ErrorRateHigh
+        expr: |
+          sum by (route) (rate(http_requests_total{code=~"5.."}[5m]))
+            /
+          sum by (route) (rate(http_requests_total[5m])) > 0.01
+        for: 10m
+        labels:
+          severity: warn
+        annotations:
+          summary: HTTP 5xx rate above 1%
+          description: Investigate failing routes before customers are impacted.
