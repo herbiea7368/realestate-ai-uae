@@ -11,6 +11,7 @@ import authRouter from './auth/controller';
 import profileRouter from './profile/controller';
 import { optionalAuth, requireAuth } from './auth/middleware';
 import { createAuditMiddleware } from './audit/audit.middleware';
+import { metricsMiddleware, startMetricsServer } from './metrics';
 
 const app = express();
 
@@ -36,6 +37,7 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(express.json());
 app.use(cookieParser());
+app.use(metricsMiddleware);
 
 app.get('/health', (_req, res) => {
   res.json({ ok: true });
@@ -49,11 +51,17 @@ app.use('/profile', profileRouter);
 app.use('/pdpl', pdplRouter);
 
 const port = Number(process.env.PORT ?? 4001);
+const metricsEnabled = process.env.METRICS_ENABLED === 'true';
+const metricsPort = Number(process.env.METRICS_PORT_API ?? 9101);
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(port, () => {
     console.log(`API listening on port ${port}`);
   });
+
+  if (metricsEnabled) {
+    startMetricsServer(metricsPort);
+  }
 }
 
 export default app;
