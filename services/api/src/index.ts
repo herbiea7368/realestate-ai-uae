@@ -11,6 +11,8 @@ import pdplDsrRouter from './pdpl/dsr.controller';
 import authRouter from './auth/controller';
 import profileRouter from './profile/controller';
 import auditExportRouter from './audit/export.controller';
+import paymentsRouter from './payments/payments.controller';
+import paymentsDashboardRouter from './payments/dashboard.controller';
 import moderationMiddleware from './moderation/middleware';
 import { optionalAuth, requireAuth } from './auth/middleware';
 import { createAuditMiddleware } from './audit/audit.middleware';
@@ -60,6 +62,18 @@ app.use(
 );
 app.use('/audit', requireAuth, createAuditMiddleware('audit/export', { action: 'AUDIT_EXPORT' }), auditExportRouter);
 app.use('/pdpl', pdplRouter);
+app.use(
+  '/payments',
+  requireAuth,
+  createAuditMiddleware('payments', { action: 'PAYMENT_FLOW' }),
+  paymentsRouter
+);
+app.use(
+  '/admin/payments',
+  requireAuth,
+  createAuditMiddleware('admin/payments', { action: 'PAYMENT_ADMIN' }),
+  paymentsDashboardRouter
+);
 
 const port = Number(process.env.PORT ?? 4001);
 const metricsEnabled = process.env.METRICS_ENABLED === 'true';

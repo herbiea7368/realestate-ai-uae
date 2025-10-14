@@ -10,6 +10,7 @@ export interface StoredUser {
   displayName?: string;
   phone?: string;
   restricted?: boolean;
+  stripeAccountId?: string;
 }
 
 const users = new Map<string, StoredUser>();
@@ -95,6 +96,16 @@ export function setUserRestriction(id: string, restricted: boolean) {
     return undefined;
   }
   const next = { ...current, restricted };
+  users.set(id, next);
+  return next;
+}
+
+export function linkStripeAccount(id: string, accountId: string) {
+  const current = users.get(id);
+  if (!current) {
+    return undefined;
+  }
+  const next = { ...current, stripeAccountId: accountId };
   users.set(id, next);
   return next;
 }
