@@ -10,6 +10,7 @@ import pdplRouter from './pdpl/controller';
 import pdplDsrRouter from './pdpl/dsr.controller';
 import authRouter from './auth/controller';
 import profileRouter from './profile/controller';
+import auditExportRouter from './audit/export.controller';
 import moderationMiddleware from './moderation/middleware';
 import { optionalAuth, requireAuth } from './auth/middleware';
 import { createAuditMiddleware } from './audit/audit.middleware';
@@ -57,6 +58,7 @@ app.use(
   createAuditMiddleware('pdpl/dsr', { action: 'DSR' }),
   pdplDsrRouter
 );
+app.use('/audit', requireAuth, createAuditMiddleware('audit/export', { action: 'AUDIT_EXPORT' }), auditExportRouter);
 app.use('/pdpl', pdplRouter);
 
 const port = Number(process.env.PORT ?? 4001);

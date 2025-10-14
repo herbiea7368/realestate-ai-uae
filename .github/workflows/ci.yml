@@ -68,6 +68,13 @@ jobs:
           name: audit-log
           path: services/api/logs/audit.log
           if-no-files-found: ignore
+      - name: Upload audit export
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-exports
+          path: services/api/exports/
+          if-no-files-found: ignore
       - name: Upload API test artifacts
         if: always()
         uses: actions/upload-artifact@v4
