@@ -339,6 +339,22 @@
       ],
       "validation": "Commits for instrumentation, infra, CI, and context log recorded.",
       "next": ""
+    },
+    {
+      "ts": "2025-10-14T08:05:27.008Z",
+      "task": "Stage 9 – Moderation, PDPL DSR, and Audit Export",
+      "commits": [
+        "b160d00",
+        "3dc56ab",
+        "9df0314"
+      ],
+      "links": [
+        "https://github.com/herbiea7368/realestate-ai-uae/tree/main/services/api/src/moderation",
+        "https://github.com/herbiea7368/realestate-ai-uae/tree/main/services/api/src/pdpl",
+        "https://github.com/herbiea7368/realestate-ai-uae/tree/main/services/api/src/audit"
+      ],
+      "validation": "Moderation blocks flagged content; DSR endpoints function per PDPL; audit exports stream NDJSON; CI artifact includes exports.",
+      "next": "Stage 10 – Payment gateway and escrow integration (Stripe Connect + local bank API) with compliance logging."
     }
   ]
 }
