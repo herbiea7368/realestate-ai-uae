@@ -9,6 +9,7 @@ export interface AuditLogPayload {
   body?: unknown;
   result?: unknown;
   userId?: string | null;
+  action?: string;
 }
 
 export interface AuditLogRecord extends AuditLogPayload {

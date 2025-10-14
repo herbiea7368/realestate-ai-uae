@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit';
 import permitsRouter from './permits/controller';
 import listingWriterRouter from './listing-writer/controller';
 import pdplRouter from './pdpl/controller';
+import pdplDsrRouter from './pdpl/dsr.controller';
 import authRouter from './auth/controller';
 import profileRouter from './profile/controller';
 import moderationMiddleware from './moderation/middleware';
@@ -50,6 +51,12 @@ app.use(moderationMiddleware);
 app.use('/permits', createAuditMiddleware('permits'), permitsRouter);
 app.use('/nlp/listing-writer', requireAuth, createAuditMiddleware('nlp/listing-writer'), listingWriterRouter);
 app.use('/profile', profileRouter);
+app.use(
+  '/pdpl/dsr',
+  requireAuth,
+  createAuditMiddleware('pdpl/dsr', { action: 'DSR' }),
+  pdplDsrRouter
+);
 app.use('/pdpl', pdplRouter);
 
 const port = Number(process.env.PORT ?? 4001);

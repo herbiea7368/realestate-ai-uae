@@ -1,7 +1,11 @@
 import type { NextFunction, Request, Response } from 'express';
 import { logAuditEvent } from './audit.logger';
 
-export function createAuditMiddleware(routeLabel: string) {
+interface AuditMiddlewareOptions {
+  action?: string;
+}
+
+export function createAuditMiddleware(routeLabel: string, options: AuditMiddlewareOptions = {}) {
   return function auditHandler(req: Request, res: Response, next: NextFunction) {
     let responsePayload: unknown;
 
@@ -24,7 +28,8 @@ export function createAuditMiddleware(routeLabel: string) {
         status: res.statusCode,
         body: req.body,
         result: responsePayload,
-        userId: req.user?.sub ?? null
+        userId: req.user?.sub ?? null,
+        action: options.action
       }).catch((error) => {
         console.error('[audit.middleware] failed to log event', error);
       });

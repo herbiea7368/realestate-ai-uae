@@ -9,6 +9,7 @@ export interface StoredUser {
   role: UserRole;
   displayName?: string;
   phone?: string;
+  restricted?: boolean;
 }
 
 const users = new Map<string, StoredUser>();
@@ -18,7 +19,8 @@ const defaultAgent: StoredUser = {
   email: 'agent@example.com',
   passwordHash: bcrypt.hashSync('secret12', 8),
   role: 'agent',
-  displayName: 'Dubai Agent'
+  displayName: 'Dubai Agent',
+  restricted: false
 };
 
 users.set(defaultAgent.id, defaultAgent);
@@ -47,6 +49,52 @@ export function updateUser(id: string, updates: Pick<StoredUser, 'displayName' |
     return undefined;
   }
   const next = { ...current, ...updates };
+  users.set(id, next);
+  return next;
+}
+
+export function rectifyUser(
+  id: string,
+  updates: Partial<Pick<StoredUser, 'email' | 'displayName' | 'phone'>>
+) {
+  const current = users.get(id);
+  if (!current) {
+    return undefined;
+  }
+  if (updates.email && updates.email !== current.email) {
+    const existing = getByEmail(updates.email);
+    if (existing && existing.id !== id) {
+      throw new Error('email_in_use');
+    }
+  }
+  const next = { ...current, ...updates };
+  users.set(id, next);
+  return next;
+}
+
+export function anonymizeUser(id: string) {
+  const current = users.get(id);
+  if (!current) {
+    return undefined;
+  }
+  const anonymizedEmail = `anonymized+${id}@example.invalid`;
+  const next: StoredUser = {
+    ...current,
+    email: anonymizedEmail,
+    displayName: undefined,
+    phone: undefined,
+    restricted: true
+  };
+  users.set(id, next);
+  return next;
+}
+
+export function setUserRestriction(id: string, restricted: boolean) {
+  const current = users.get(id);
+  if (!current) {
+    return undefined;
+  }
+  const next = { ...current, restricted };
   users.set(id, next);
   return next;
 }
