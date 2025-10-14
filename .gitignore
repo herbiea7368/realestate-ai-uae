@@ -25,4 +25,5 @@ artifacts/
 test-results/
 *.egg-info/
 **/junit.xml
+services/api/payments-test-report.json
 
