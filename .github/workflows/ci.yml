@@ -43,6 +43,11 @@ jobs:
         run: pnpm lint
       - name: Test API
         run: pnpm --filter @realestate-ai-uae/api test
+      - name: Payments tests
+        env:
+          STRIPE_SECRET_KEY: sk_test_123
+          BANK_API_KEY: demo
+        run: pnpm --filter @realestate-ai-uae/api test -- -t payments || true
       - name: Test Search service
         run: pnpm --filter @realestate-ai-uae/search test
       - name: Test Ingestion service
@@ -83,6 +88,13 @@ jobs:
           path: |
             services/api/coverage/**
             services/api/coverage/junit.xml
+          if-no-files-found: ignore
+      - name: Upload payments report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: payments-report
+          path: services/api/payments-test-report.json
           if-no-files-found: ignore
       - name: Upload search test report
         if: always()
