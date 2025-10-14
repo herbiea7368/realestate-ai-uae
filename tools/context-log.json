@@ -355,6 +355,24 @@
       ],
       "validation": "Moderation blocks flagged content; DSR endpoints function per PDPL; audit exports stream NDJSON; CI artifact includes exports.",
       "next": "Stage 10 – Payment gateway and escrow integration (Stripe Connect + local bank API) with compliance logging."
+    },
+    {
+      "ts": "2025-10-14T09:50:56.367Z",
+      "task": "Stage 10 – Payments + Escrow + Compliance Logging",
+      "commits": [
+        "e4999d8",
+        "bc3a068",
+        "0b0efb8",
+        "1551a80",
+        "9765fb0"
+      ],
+      "links": [
+        "https://github.com/herbiea7368/realestate-ai-uae/tree/main/services/api/src/payments",
+        "https://github.com/herbiea7368/realestate-ai-uae/blob/main/services/api/src/sql/schema.finance.sql",
+        "https://github.com/herbiea7368/realestate-ai-uae/blob/main/.github/workflows/ci.yml"
+      ],
+      "validation": "Stripe Connect onboarding functional; escrow hold/release simulated; AML flags logged; finance dashboard returns aggregated totals; CI passes with payment artifacts.",
+      "next": "Stage 11 – Notifications (email/SMS/WhatsApp) + queue architecture for async jobs."
     }
   ]
 }
