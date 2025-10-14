@@ -1,8 +1,9 @@
 import Stripe from 'stripe';
 
-const apiVersion: Stripe.StripeConfig['apiVersion'] = '2024-06-01';
-
 const secretKey = process.env.STRIPE_SECRET_KEY;
+const apiVersion = (
+  process.env.STRIPE_API_VERSION ?? '2024-06-01'
+) as Stripe.LatestApiVersion;
 
 if (!secretKey) {
   console.warn('[payments.stripe] STRIPE_SECRET_KEY not configured');
