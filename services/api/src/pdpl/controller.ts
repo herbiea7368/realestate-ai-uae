@@ -16,8 +16,9 @@ pdplRouter.post('/consent', (req, res) => {
   }
 
   const { userId, consent } = parsed.data;
-  const record = setConsent(userId, consent);
-  return res.status(201).json({ userId, ...record });
+  const ledgerUserId = req.user?.sub ?? userId;
+  const record = setConsent(ledgerUserId, consent);
+  return res.status(201).json({ userId: ledgerUserId, ...record });
 });
 
 pdplRouter.get('/consent/:userId', (req, res) => {

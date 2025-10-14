@@ -9,6 +9,7 @@ import listingWriterRouter from './listing-writer/controller';
 import pdplRouter from './pdpl/controller';
 import authRouter from './auth/controller';
 import profileRouter from './profile/controller';
+import moderationMiddleware from './moderation/middleware';
 import { optionalAuth, requireAuth } from './auth/middleware';
 import { createAuditMiddleware } from './audit/audit.middleware';
 import { metricsMiddleware, startMetricsServer } from './metrics';
@@ -45,6 +46,7 @@ app.get('/health', (_req, res) => {
 
 app.use('/auth', authRouter);
 app.use(optionalAuth);
+app.use(moderationMiddleware);
 app.use('/permits', createAuditMiddleware('permits'), permitsRouter);
 app.use('/nlp/listing-writer', requireAuth, createAuditMiddleware('nlp/listing-writer'), listingWriterRouter);
 app.use('/profile', profileRouter);

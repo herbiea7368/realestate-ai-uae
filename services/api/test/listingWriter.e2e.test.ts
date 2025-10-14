@@ -13,7 +13,10 @@ async function loginDefaultAgent() {
     );
   }
 
-  return loginResponse.body.token as string;
+  return {
+    token: loginResponse.body.token as string,
+    user: loginResponse.body.user as { id: string }
+  };
 }
 
 describe('listing writer endpoint', () => {
@@ -27,7 +30,11 @@ describe('listing writer endpoint', () => {
       .query({ lang: 'en' })
       .send({ trakheesi_number: '11112222' });
 
-    const token = await loginDefaultAgent();
+    const { token, user } = await loginDefaultAgent();
+
+    await request(app)
+      .post('/pdpl/consent')
+      .send({ userId: user.id, consent: true });
 
     const response = await request(app)
       .post('/nlp/listing-writer')
@@ -51,7 +58,11 @@ describe('listing writer endpoint', () => {
   });
 
   it('blocks requests when permit is invalid or expired', async () => {
-    const token = await loginDefaultAgent();
+    const { token, user } = await loginDefaultAgent();
+
+    await request(app)
+      .post('/pdpl/consent')
+      .send({ userId: user.id, consent: true });
 
     const invalidResponse = await request(app)
       .post('/nlp/listing-writer')
