@@ -1,0 +1,31 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY_URL: ghcr.io/herbiea7368/realestate-ai-uae
+      RELEASE_TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+      - name: Login Helm to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io --username $GITHUB_ACTOR --password-stdin
+      - name: Build & push multi-service images
+        run: |
+          docker build -t $REGISTRY_URL/api:$RELEASE_TAG ./services/api
+          docker build -t $REGISTRY_URL/search:$RELEASE_TAG ./services/search
+          docker build -t $REGISTRY_URL/mlbridge:$RELEASE_TAG ./services/ml-bridge
+          docker push $REGISTRY_URL/api:$RELEASE_TAG
+          docker push $REGISTRY_URL/search:$RELEASE_TAG
+          docker push $REGISTRY_URL/mlbridge:$RELEASE_TAG
+      - name: Publish Helm chart
+        run: |
+          helm package infra/helm
+          helm push ./realestate-ai-1.0.0.tgz oci://$REGISTRY_URL

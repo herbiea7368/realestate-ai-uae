@@ -1,0 +1,23 @@
+name: iac-validate
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: dummy
+      AWS_SECRET_ACCESS_KEY: dummy
+      AWS_DEFAULT_REGION: us-east-1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Terraform fmt/validate
+        run: |
+          cd infra/terraform
+          terraform init -backend=false
+          terraform validate
+          terraform plan -lock=false -input=false -no-color
+      - name: Helm lint
+        run: helm lint infra/helm
