@@ -1,1 +1,17 @@
-This repository houses the minimal pnpm monorepo scaffold for the Dubai/UAE real estate platform described in `RealEstate_AI_PRD_Comprehensive.docx`, providing placeholder workspaces for the web client, API services, ML bridge, shared packages, infrastructure as code, documentation, tooling, and CI workflows in preparation for production-grade implementation.
+# RealEstate AI Platform
+
+## Overview
+Full-stack AI real estate platform with:
+- NLP property generation
+- Semantic search
+- Multi-tenant management
+- Chat assistant
+- Observability and self-healing
+
+## Deployment
+```bash
+docker compose up -d
+```
+
+## API Reference
+See /docs/services
