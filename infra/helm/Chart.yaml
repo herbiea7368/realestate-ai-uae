@@ -1,0 +1,5 @@
+apiVersion: v2
+name: realestate-ai
+version: 1.0.0
+appVersion: "1.0.0"
+description: Helm chart for RealEstate AI Platform
