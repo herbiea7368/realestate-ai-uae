@@ -1,0 +1,12 @@
+name: governance-check
+on:
+  push:
+    branches: [main]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify governance docs
+        run: |
+          test -f LICENSE && test -f GOVERNANCE.md && test -f COMPLIANCE.md && echo "Governance verified"

@@ -1,0 +1,7 @@
+schedule:
+  - name: primary
+    engineer: ops@realestate.ai
+    rotation: weekly
+  - name: backup
+    engineer: devops@realestate.ai
+    rotation: weekly
