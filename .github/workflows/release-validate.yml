@@ -1,0 +1,10 @@
+name: release-validate
+on:
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./tools/audit/staging-verify.sh
+      - run: pnpm exec tsx tools/marketing/release-announce.ts

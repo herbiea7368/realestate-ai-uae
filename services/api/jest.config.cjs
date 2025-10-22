@@ -16,5 +16,8 @@ module.exports = {
     ]
   ],
   setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
-  roots: ['<rootDir>/src', '<rootDir>/test']
+  roots: ['<rootDir>/src', '<rootDir>/test'],
+  moduleNameMapper: {
+    '^@realestate-ai-uae/marketing$': '<rootDir>/../marketing/src/index.ts'
+  }
 };

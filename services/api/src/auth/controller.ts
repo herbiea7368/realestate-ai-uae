@@ -3,8 +3,9 @@ import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import { signToken } from './jwt';
-import { addUser, getByEmail, getUser } from './users.store';
+import { addUser, assignUserRole, getByEmail, getUser } from './users.store';
 import { requireAuth } from './middleware';
+import { sendWelcomeEmail } from '@realestate-ai-uae/marketing';
 
 const credentialsSchema = z.object({
   email: z.string().email(),
@@ -27,13 +28,28 @@ router.post('/register', async (req, res) => {
     return res.status(409).json({ error: 'account_exists' });
   }
   const passwordHash = await bcrypt.hash(parsed.data.password, 10);
-  const user = addUser({
+  let user = addUser({
     id: randomUUID(),
     email,
     passwordHash,
-    role: 'agent'
+    role: 'buyer',
+    roles: ['buyer']
   });
-  const token = signToken({ sub: user.id, email: user.email, role: user.role });
+  const defaultAdminEmail = (process.env.DEFAULT_ADMIN_EMAIL ?? '').trim().toLowerCase();
+  if (defaultAdminEmail && email === defaultAdminEmail) {
+    user = assignUserRole(user.id, 'admin') ?? user;
+  }
+  const claims = {
+    sub: user.id,
+    email: user.email,
+    role: user.role,
+    roles: user.roles
+  };
+  const welcomeName = parsed.data.email.split('@')[0] ?? parsed.data.email;
+  sendWelcomeEmail(email, welcomeName).catch((err: unknown) => {
+    console.error('sendWelcomeEmail_failed', err);
+  });
+  const token = signToken(claims);
   res.cookie('id_token', token, {
     httpOnly: true,
     sameSite: 'lax',
@@ -44,7 +60,8 @@ router.post('/register', async (req, res) => {
     user: {
       id: user.id,
       email: user.email,
-      role: user.role
+      role: user.role,
+      roles: user.roles
     }
   });
 });
@@ -63,7 +80,13 @@ router.post('/login', async (req, res) => {
   if (!matches) {
     return res.status(401).json({ error: 'unauthorized' });
   }
-  const token = signToken({ sub: existing.id, email: existing.email, role: existing.role });
+  const claims = {
+    sub: existing.id,
+    email: existing.email,
+    role: existing.role,
+    roles: existing.roles
+  };
+  const token = signToken(claims);
   res.cookie('id_token', token, {
     httpOnly: true,
     sameSite: 'lax',
@@ -74,7 +97,8 @@ router.post('/login', async (req, res) => {
     user: {
       id: existing.id,
       email: existing.email,
-      role: existing.role
+      role: existing.role,
+      roles: existing.roles
     }
   });
 });
@@ -91,6 +115,7 @@ router.get('/me', requireAuth, (req, res) => {
     id: current.id,
     email: current.email,
     role: current.role,
+    roles: current.roles,
     displayName: current.displayName,
     phone: current.phone
   });
